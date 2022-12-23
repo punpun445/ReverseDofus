@@ -3,7 +3,6 @@
 
 from dataclasses import dataclass
 from typing import List, Dict, Any, Callable
-from io import BufferedReader
 
 from utils import *
 
@@ -33,16 +32,16 @@ class InvalidFormat(Exception):
 
 class D2OReader:
 
-    def __init__(self, stream: BufferedReader) -> None:
+    def __init__(self, path: str) -> None:
 
         # attributes
-        self._stream = stream
+        self._stream = open(path, 'rb')
 
         self._index_table: Dict[int, int] = dict()
         self._classes: Dict[int, _ClassStruct] = dict()
         self._query_table: Dict[str ,_QueryStruct] = dict()
 
-        # reading metadata
+        # reading accessor data
         self._stream.seek(0)
         header = self._stream.read(3).decode('ascii')
         if header != 'D2O':
@@ -51,6 +50,9 @@ class D2OReader:
         self._readIndexTable()
         self._readClasses()
         self._readQueryTable()
+    
+    def __del__(self) -> None:
+        self._stream.close()
 
 
     def _readIndexTable(self) -> None:
@@ -223,15 +225,9 @@ class D2OReader:
 
 
 if __name__ == '__main__':
-
-    stream = open('D2O/Monsters.d2o', 'rb')
-
-    d = D2OReader(stream)
-
-    print(d.makeQuery('grades.intelligence', lambda x: x > 2000)[-1]['nameId'])
+    pass
 
 
-    stream.close()
 
     
 

@@ -18,3 +18,6 @@ def readDouble(stream: BufferedReader) -> float:
 
 def readUInt(stream: BufferedReader) -> float:
     return struct.unpack('>I', stream.read(4))[0]
+
+def readUByte(stream: BufferedReader) -> ...:
+    return struct.unpack('>B', stream.read(1))[0]
